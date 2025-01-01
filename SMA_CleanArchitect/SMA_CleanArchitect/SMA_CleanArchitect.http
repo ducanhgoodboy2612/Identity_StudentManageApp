@@ -1,6 +1,0 @@
-@SMA_CleanArchitect_HostAddress = http://localhost:5144
-
-GET {{SMA_CleanArchitect_HostAddress}}/weatherforecast/
-Accept: application/json
-
-###

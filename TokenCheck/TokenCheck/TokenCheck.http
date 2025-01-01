@@ -1,0 +1,6 @@
+@TokenCheck_HostAddress = http://localhost:5050
+
+GET {{TokenCheck_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
