@@ -1,0 +1,14 @@
+D:\ĐA4\Intern\StudentManagement_API\StudentManagement_Domain\bin\Debug\net8.0\StudentManagement_Domain.deps.json
+D:\ĐA4\Intern\StudentManagement_API\StudentManagement_Domain\bin\Debug\net8.0\StudentManagement_Domain.runtimeconfig.json
+D:\ĐA4\Intern\StudentManagement_API\StudentManagement_Domain\bin\Debug\net8.0\StudentManagement_Domain.dll
+D:\ĐA4\Intern\StudentManagement_API\StudentManagement_Domain\bin\Debug\net8.0\StudentManagement_Domain.pdb
+D:\ĐA4\Intern\StudentManagement_API\StudentManagement_Domain\obj\Debug\net8.0\StudentManagement_Domain.csproj.AssemblyReference.cache
+D:\ĐA4\Intern\StudentManagement_API\StudentManagement_Domain\obj\Debug\net8.0\StudentManagement_Domain.GeneratedMSBuildEditorConfig.editorconfig
+D:\ĐA4\Intern\StudentManagement_API\StudentManagement_Domain\obj\Debug\net8.0\StudentManagement_Domain.AssemblyInfoInputs.cache
+D:\ĐA4\Intern\StudentManagement_API\StudentManagement_Domain\obj\Debug\net8.0\StudentManagement_Domain.AssemblyInfo.cs
+D:\ĐA4\Intern\StudentManagement_API\StudentManagement_Domain\obj\Debug\net8.0\StudentManagement_Domain.csproj.CoreCompileInputs.cache
+D:\ĐA4\Intern\StudentManagement_API\StudentManagement_Domain\obj\Debug\net8.0\StudentManagement_Domain.dll
+D:\ĐA4\Intern\StudentManagement_API\StudentManagement_Domain\obj\Debug\net8.0\refint\StudentManagement_Domain.dll
+D:\ĐA4\Intern\StudentManagement_API\StudentManagement_Domain\obj\Debug\net8.0\StudentManagement_Domain.pdb
+D:\ĐA4\Intern\StudentManagement_API\StudentManagement_Domain\obj\Debug\net8.0\StudentManagement_Domain.genruntimeconfig.cache
+D:\ĐA4\Intern\StudentManagement_API\StudentManagement_Domain\obj\Debug\net8.0\ref\StudentManagement_Domain.dll

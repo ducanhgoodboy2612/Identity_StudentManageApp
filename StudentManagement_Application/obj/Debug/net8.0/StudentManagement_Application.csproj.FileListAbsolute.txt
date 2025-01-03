@@ -1,0 +1,17 @@
+D:\ĐA4\Intern\StudentManagement_API\StudentManagement_Application\bin\Debug\net8.0\StudentManagement_Application.deps.json
+D:\ĐA4\Intern\StudentManagement_API\StudentManagement_Application\bin\Debug\net8.0\StudentManagement_Application.runtimeconfig.json
+D:\ĐA4\Intern\StudentManagement_API\StudentManagement_Application\bin\Debug\net8.0\StudentManagement_Application.dll
+D:\ĐA4\Intern\StudentManagement_API\StudentManagement_Application\bin\Debug\net8.0\StudentManagement_Application.pdb
+D:\ĐA4\Intern\StudentManagement_API\StudentManagement_Application\bin\Debug\net8.0\StudentManagement_Domain.dll
+D:\ĐA4\Intern\StudentManagement_API\StudentManagement_Application\bin\Debug\net8.0\StudentManagement_Domain.pdb
+D:\ĐA4\Intern\StudentManagement_API\StudentManagement_Application\obj\Debug\net8.0\StudentManagement_Application.csproj.AssemblyReference.cache
+D:\ĐA4\Intern\StudentManagement_API\StudentManagement_Application\obj\Debug\net8.0\StudentManagement_Application.GeneratedMSBuildEditorConfig.editorconfig
+D:\ĐA4\Intern\StudentManagement_API\StudentManagement_Application\obj\Debug\net8.0\StudentManagement_Application.AssemblyInfoInputs.cache
+D:\ĐA4\Intern\StudentManagement_API\StudentManagement_Application\obj\Debug\net8.0\StudentManagement_Application.AssemblyInfo.cs
+D:\ĐA4\Intern\StudentManagement_API\StudentManagement_Application\obj\Debug\net8.0\StudentManagement_Application.csproj.CoreCompileInputs.cache
+D:\ĐA4\Intern\StudentManagement_API\StudentManagement_Application\obj\Debug\net8.0\StudentManagement_Application.csproj.CopyComplete
+D:\ĐA4\Intern\StudentManagement_API\StudentManagement_Application\obj\Debug\net8.0\StudentManagement_Application.dll
+D:\ĐA4\Intern\StudentManagement_API\StudentManagement_Application\obj\Debug\net8.0\refint\StudentManagement_Application.dll
+D:\ĐA4\Intern\StudentManagement_API\StudentManagement_Application\obj\Debug\net8.0\StudentManagement_Application.pdb
+D:\ĐA4\Intern\StudentManagement_API\StudentManagement_Application\obj\Debug\net8.0\StudentManagement_Application.genruntimeconfig.cache
+D:\ĐA4\Intern\StudentManagement_API\StudentManagement_Application\obj\Debug\net8.0\ref\StudentManagement_Application.dll
