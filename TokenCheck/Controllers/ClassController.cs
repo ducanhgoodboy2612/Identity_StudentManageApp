@@ -62,6 +62,7 @@ namespace StudentManagement_API.Controllers
             return Ok(classes);
         }
 
+        [Authorize(Policy = "ManageTP_ClassPolicy")]
         [HttpPost]
         public async Task<IActionResult> AddClass([FromBody] ClassDto classDto)
         {

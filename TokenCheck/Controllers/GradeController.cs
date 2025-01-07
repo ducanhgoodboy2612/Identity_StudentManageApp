@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using StudentManagement_Domain.DTOs;
 using StudentManagement_Domain.Interface;
 using StudentManagement_Application.Services;
+using StudentManagement_Infrastructure.Repositories;
 namespace StudentManagement_API.Controllers
 {
     [Route("api/[controller]")]
@@ -47,7 +48,7 @@ namespace StudentManagement_API.Controllers
             return CreatedAtAction(nameof(CreateGrade), new { id = grade.GradeID }, grade);
         }
 
-        [HttpPut]
+        [HttpPut("update")]
         public async Task<IActionResult> UpdateGrade(GradeDTO gradeDTO)
         {
             var grade = await _repo.UpdateGradeAsync(gradeDTO);
@@ -89,6 +90,108 @@ namespace StudentManagement_API.Controllers
                 StudentId = studentId,
                 AverageScore = averageScore
             });
+        }
+
+        //[HttpGet("{studentId}/grades")]
+        //public async Task<IActionResult> GetGradesByStudentId(int studentId, [FromQuery] DateTime startDate, [FromQuery] DateTime endDate)
+        //{
+        //    // Validate inputs
+        //    if (startDate > endDate)
+        //    {
+        //        return BadRequest(new { Message = "Start date must be earlier than or equal to end date." });
+        //    }
+
+        //    var grades = await _repo.GetGradesByStudentId(studentId, startDate, endDate);
+
+        //    if (!grades.Any())
+        //    {
+        //        return NotFound(new { Message = "No grades found for the given student and date range." });
+        //    }
+
+        //    var result = grades.Select(g => new
+        //    {
+        //        g.GradeID,
+        //        g.EnrollmentID,
+        //        g.ExamID,
+        //        g.MarksObtained,
+        //        g.Note,
+        //        Exam = new
+        //        {
+        //            g.Exam.ExamID,
+        //            g.Exam.ClassID,
+        //            g.Exam.ExamDate,
+        //            g.Exam.ExamType,
+        //            g.Exam.TotalMarks
+        //        }
+        //    });
+
+        //    return Ok(result);
+        //}
+
+        //[HttpGet("{studentId}/grade-summary")]
+        //public async Task<IActionResult> GetStudentGrades(int studentId)
+        //{
+        //    var result = await _repo.GetStudentGradesAsync(studentId);
+
+        //    if (result == null)
+        //    {
+        //        return NotFound(new
+        //        {
+        //            Message = "Student not found or no grades available."
+        //        });
+        //    }
+
+        //    return Ok(new
+        //    {
+        //        result.FullName,
+        //        Grades = result.Grades.Select(g => new
+        //        {
+        //            g.ClassID,
+        //            GradesByExamType = g.GradesByExamType.ToDictionary(
+        //                e => e.Key,
+        //                e => new
+        //                {
+        //                    e.Value.MarksObtained,
+        //                    e.Value.TotalMarks
+        //                }
+        //            ),
+        //            g.AverageMarks
+        //        })
+        //    });
+        //}
+
+        [HttpGet("{studentId}/retake-classes")]
+        public async Task<IActionResult> GetRetakeClasses(int studentId)
+        {
+            var retakeClasses = await _repo.GetRetakeClassesAsync(studentId);
+
+            if (!retakeClasses.Any())
+            {
+                return NotFound(new { Message = "No classes found that require retake for this student." });
+            }
+
+            return Ok(retakeClasses.Select(c => new
+            {
+                c.ClassID,
+                c.ClassName,
+                c.CourseID,
+                c.LecturerID,
+                c.Semester,
+                c.Year
+            }));
+        }
+
+        [HttpGet("{classId}/retaking-students")]
+        public async Task<IActionResult> GetStudentsRetakingClass(int classId)
+        {
+            var studentsRetaking = await _repo.GetStudentsRetakingClassAsync(classId);
+
+            if (!studentsRetaking.Any())
+            {
+                return NotFound(new { Message = "No students found retaking this class." });
+            }
+
+            return Ok(studentsRetaking);
         }
     }
 }

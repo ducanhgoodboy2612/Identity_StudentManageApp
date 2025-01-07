@@ -51,11 +51,11 @@ namespace StudentManagement_Application.Services
 
         private string GetSemester(DateTime date)
         {
-            if (date.Month >= 9 || date.Month <= 1)
+            if (date.Month >= 7 && date.Month <= 12)
             {
-                return "Semester1"; // Kỳ 1 từ tháng 9 đến tháng 1
+                return "Semester1"; // Kỳ 1 từ tháng 7 đến tháng 12
             }
-            return "Semester2"; // Kỳ 2 từ tháng 2 đến tháng 6
+            return "Semester2"; // Kỳ 2 từ tháng 1 đến tháng 6
         }
     }
 }

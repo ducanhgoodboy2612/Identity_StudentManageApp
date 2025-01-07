@@ -65,6 +65,20 @@ namespace StudentManagement_API.Controllers
             }
         }
 
+        [HttpDelete("{userId}/claims")]
+        public async Task<IActionResult> RemoveClaim(string userId, [FromQuery] string claimType, [FromQuery] string claimValue)
+        {
+            try
+            {
+                var success = await _authRepository.RemoveUserClaimAsync(userId, claimType, claimValue);
+                return success ? NoContent() : BadRequest(new { message = "Failed to remove claim." });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
+        }
+
         [HttpPost("register")]
 
         public async Task<IActionResult> Register([FromBody] RegisterModel model)
@@ -85,10 +99,24 @@ namespace StudentManagement_API.Controllers
 
             return Ok(new
             {
-                Message = "User registered successfully.",
+                Message = "User registered successfully. Please confirm your email to complete.",
                 User = new { user.Email }
             });
         }
+
+        [HttpGet("ConfirmEmail")]
+        public async Task<IActionResult> ConfirmEmail(string userId, string token)
+        {
+            var (success, message, errors) = await _authRepository.ConfirmEmailAsync(userId, token);
+
+            if (!success)
+            {
+                return BadRequest(new { message, errors });
+            }
+
+            return Ok(new { message });
+        }
+
 
         [HttpGet("getUserRolesAndClaims")]
         public async Task<IActionResult> GetUserRolesAndClaims(string email)

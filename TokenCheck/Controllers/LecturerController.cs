@@ -1,55 +1,78 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using StudentManagement_Domain.DTOs;
 using StudentManagement_Domain.Interface;
-
+using StudentManagement_Infrastructure.Repositories;
+using StudentManagement_Domain.DTOs;
 namespace StudentManagement_API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
     public class LecturerController : ControllerBase
     {
-        private readonly ILecturerRepository _service;
+        private readonly LecturerRepository _lecturerRepository;
 
-        public LecturerController(ILecturerRepository service)
+        public LecturerController(LecturerRepository service)
         {
-            _service = service;
+            _lecturerRepository = service;
         }
 
+        [Authorize(Policy = "ManageStudentsPolicy")]
         [HttpGet("{id}")]
         public async Task<IActionResult> GetLecturerById(int id)
         {
-            var lecturer = await _service.GetByIdAsync(id);
+            var lecturer = await _lecturerRepository.GetByIdAsync(id);
             if (lecturer == null) return NotFound();
             return Ok(lecturer);
         }
 
-        //[HttpPost]
-        //public async Task<IActionResult> CreateLecturer([FromBody] LecturerDTO lecturerDTO)
-        //{
-        //    if (!ModelState.IsValid) return BadRequest(ModelState);
+        [Authorize(Policy = "ManageUserPolicy")]
+        [HttpPost("create")]
+        public async Task<IActionResult> AddLecturer([FromBody] LecturerDTO lecturerDTO)
+        {
+            if (lecturerDTO == null)
+            {
+                return BadRequest("Lecturer data is required.");
+            }
 
-        //    var createdLecturer = await _service.AddLecturerAsync(lecturerDTO);
-        //    return CreatedAtAction(nameof(GetLecturerById), new { id = createdLecturer.LecturerID }, createdLecturer);
-        //}
+            try
+            {
+                var addedLecturer = await _lecturerRepository.AddLecturerAsync(lecturerDTO);
+                return CreatedAtAction(nameof(GetLecturerById), new { id = addedLecturer.LecturerID }, addedLecturer);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
+        }
 
-        //[HttpPut("{id}")]
-        //public async Task<IActionResult> UpdateLecturer(int id, [FromBody] LecturerDTO lecturerDTO)
-        //{
-        //    if (!ModelState.IsValid) return BadRequest(ModelState);
+        [Authorize(Policy = "ManageUserPolicy")]
+        [HttpPut("update")]
+        public async Task<IActionResult> UpdateLecturer([FromBody] LecturerDTO lecturerDTO)
+        {
+            if (lecturerDTO == null || lecturerDTO.LecturerID <= 0)
+            {
+                return BadRequest("Valid Lecturer data is required.");
+            }
 
-        //    var updatedLecturer = await _service.UpdateLecturerAsync(id, lecturerDTO);
-        //    if (updatedLecturer == null) return NotFound();
-
-        //    return Ok(updatedLecturer);
-        //}
+            try
+            {
+                var updatedLecturer = await _lecturerRepository.UpdateLecturerAsync(lecturerDTO);
+                return Ok(updatedLecturer);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
+        }
 
 
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteLecturer(int id)
         {
-            var isDeleted = await _service.DeleteLecturerAsync(id);
+            var isDeleted = await _lecturerRepository.DeleteLecturerAsync(id);
             if (!isDeleted) return NotFound();
 
             return NoContent();

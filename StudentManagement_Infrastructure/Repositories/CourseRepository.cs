@@ -43,20 +43,39 @@ namespace StudentManagement_Infrastructure.Repositories
             return await _context.Courses.ToListAsync();
         }
 
-        // Thêm mới khóa học
-        public async Task<Course> AddCourseAsync(Course course)
+        public async Task<Course> CreateCourseAsync(CourseDTO courseDTO)
         {
-            _context.Courses.Add(course);
+            var course = new Course
+            {
+                CourseName = courseDTO.CourseName,
+                Credits = courseDTO.Credits,
+                StartDate = courseDTO.StartDate,
+                EndDate = courseDTO.EndDate,
+                DepartmentID = courseDTO.DepartmentID
+            };
+
+            await _context.Courses.AddAsync(course);
             await _context.SaveChangesAsync();
             return course;
         }
 
-        public async Task<Course> UpdateCourseAsync(Course course)
+
+        public async Task<Course> UpdateCourseAsync(CourseDTO courseDTO)
         {
-            _context.Entry(course).State = EntityState.Modified;
+            var course = await _context.Courses.FirstOrDefaultAsync(c => c.CourseID == courseDTO.CourseID);
+            if (course == null) throw new KeyNotFoundException("Course not found.");
+
+            course.CourseName = courseDTO.CourseName;
+            course.Credits = courseDTO.Credits;
+            course.StartDate = courseDTO.StartDate;
+            course.EndDate = courseDTO.EndDate;
+            course.DepartmentID = courseDTO.DepartmentID;
+
+            _context.Courses.Update(course);
             await _context.SaveChangesAsync();
             return course;
         }
+
 
         public async Task<bool> DeleteCourseAsync(int courseId)
         {

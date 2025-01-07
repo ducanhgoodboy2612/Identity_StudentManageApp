@@ -60,9 +60,9 @@ namespace StudentManagement_Infrastructure.Repositories
         {
             var semesterStart = new DateTime(year, _configuration.GetValue<int>($"AppSettings:{semester}StartMonth"), 1);
 
-            var semesterEndYear = semester == "Semester1" ? year + 1 : year;
+            //var semesterEndYear = semester == "Semester1" ? year + 1 : year;
 
-            var semesterEnd = new DateTime(semesterEndYear, _configuration.GetValue<int>($"AppSettings:{semester}EndMonth"), 30);
+            var semesterEnd = new DateTime(year, _configuration.GetValue<int>($"AppSettings:{semester}EndMonth"), 30);
 
             var enrolledClasses = await _context.Enrollments
                 .Where(e => e.StudentID == studentId && e.EnrollmentDate >= semesterStart && e.EnrollmentDate <= semesterEnd)

@@ -137,6 +137,62 @@ namespace StudentManagement_Infrastructure.Repositories
             ).ToListAsync();
         }
 
+        public async Task<StudentGradesResult> GetStudentGradesAsync(int studentId)
+        {
+            var student = await _context.Students
+                .Where(s => s.StudentID == studentId)
+                .Select(s => new
+                {
+                    s.StudentID,
+                    FullName = $"{s.FirstName} {s.LastName}"
+                })
+                .FirstOrDefaultAsync();
+
+            if (student == null)
+                return null;
+
+            var grades = await _context.Grades
+                .Where(g => g.StudentID == studentId)
+                .Join(
+                    _context.Exams,
+                    grade => grade.ExamID,
+                    exam => exam.ExamID,
+                    (grade, exam) => new
+                    {
+                        exam.ClassID,
+                        exam.ExamType,
+                        grade.MarksObtained,
+                        exam.TotalMarks
+                    })
+                .ToListAsync(); 
+
+            var groupedGrades = grades
+                .GroupBy(g => g.ClassID)
+                .Select(g => new ClassGradeResult
+                {
+                    ClassID = g.Key,
+                    GradesByExamType = g
+                        .GroupBy(e => e.ExamType)
+                        .ToDictionary(
+                            e => e.Key,
+                            e => new ExamTypeResult
+                            {
+                                TotalMarks = e.Sum(x => x.TotalMarks),
+                                MarksObtained = e.Sum(x => x.MarksObtained)
+                            }
+                        ),
+                    AverageMarks = g.Average(x => x.MarksObtained)
+                })
+                .ToList();
+
+            return new StudentGradesResult
+            {
+                FullName = student.FullName,
+                Grades = groupedGrades
+            };
+        }
+
+
         //public async Task<List<GradeSummaryDto>> GetExamResultsByClassId(int classId)
         //{
         //    return await _context.Set<Grade>()
@@ -244,6 +300,42 @@ namespace StudentManagement_Infrastructure.Repositories
             }
         }
 
+        public async Task<IEnumerable<Class>> GetRetakeClassesAsync(int studentId)
+        {
+            var retakeClasses = await (
+                from enrollment in _context.Enrollments
+                join @class in _context.Classes on enrollment.ClassID equals @class.ClassID
+                where enrollment.StudentID == studentId
+                let averageGrade = _context.Grades
+                    .Where(g => g.EnrollmentID == enrollment.EnrollmentID)
+                    .Average(g => (decimal?)g.MarksObtained) ?? 0
+                where averageGrade < 50 
+                select @class
+            ).ToListAsync();
+
+            return retakeClasses;
+        }
+
+        public async Task<IEnumerable<StudentRetakeInfo>> GetStudentsRetakingClassAsync(int classId)
+        {
+            var studentsRetaking = await (
+                from enrollment in _context.Enrollments
+                join student in _context.Students on enrollment.StudentID equals student.StudentID
+                where enrollment.ClassID == classId
+                let averageGrade = _context.Grades
+                    .Where(g => g.EnrollmentID == enrollment.EnrollmentID)
+                    .Average(g => (decimal?)g.MarksObtained) ?? 0
+                where averageGrade < 50 
+                select new StudentRetakeInfo
+                {
+                    StudentID = student.StudentID,
+                    FullName = $"{student.FirstName} {student.LastName}",
+                    AverageGrade = averageGrade
+                }
+            ).ToListAsync();
+
+            return studentsRetaking;
+        }
 
 
 
@@ -295,6 +387,6 @@ namespace StudentManagement_Infrastructure.Repositories
 
     }
 
-   
+
 
 }

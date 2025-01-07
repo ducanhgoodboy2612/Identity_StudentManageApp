@@ -6,7 +6,8 @@ namespace StudentManagement_Domain.Interface
     public interface ILecturerRepository
     {
         Task<Lecturer> GetByIdAsync(int id);
-        //Task<Lecturer> AddLecturerAsync(LecturerDTO lecturerDTO);
+        Task<Lecturer> AddLecturerAsync(LecturerDTO lecturerDTO);
+        Task<Lecturer> UpdateLecturerAsync(LecturerDTO lecturerDTO);
         //Task<Lecturer> UpdateLecturerAsync(int id, LecturerDTO lecturerDTO);
         Task<bool> DeleteLecturerAsync(int id);
     }

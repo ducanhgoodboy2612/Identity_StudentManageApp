@@ -15,5 +15,9 @@ namespace StudentManagement_Domain.Interface
         Task<(bool Succeeded, string[] Errors, IdentityUser? User)> RegisterAsync(string email, string password);
         Task<(IList<string> Roles, IList<Claim> Claims)> GetUserRolesAndClaimsAsync(string email);
         Task<string> ValidateOtpForLogin(string email, string otp);
+        Task<bool> RemoveUserClaimAsync(string userId, string claimType, string claimValue);
+        Task<(bool Success, string Message, IEnumerable<IdentityError> Errors)> ConfirmEmailAsync(string userId, string token);
+        //Task<(bool Success, string Message, IEnumerable<IdentityError> Errors)> ConfirmEmailAsync(string email, string password, string token);
+
     }
 }

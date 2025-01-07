@@ -14,5 +14,8 @@ namespace StudentManagement_Domain.Interface
         Task<List<GradeSummaryDto>> GetExamResultsByClassId(int classId);
         Task<decimal> CalculateAverageScoreAsync(int classId, int studentId);
         Task<bool> DeleteGradesByStudentAndClassAsync(int studentId, int classId);
+        Task<StudentGradesResult> GetStudentGradesAsync(int studentId);
+        Task<IEnumerable<Class>> GetRetakeClassesAsync(int studentId);
+        Task<IEnumerable<StudentRetakeInfo>> GetStudentsRetakingClassAsync(int classId);
     }
 }

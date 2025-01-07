@@ -15,6 +15,8 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
+
+
 builder.Services.AddSwaggerGen(option =>
 {
     option.SwaggerDoc("v1", new OpenApiInfo { Title = "StudentAdministration.API", Version = "v1" });
@@ -61,17 +63,31 @@ builder.Services.AddTransient<IExamRepository, ExamRepository>();
 
 builder.Services.AddScoped<IAuthRepository, AuthRepository>();
 
-builder.Services.AddScoped<ILecturerRepository, LecturerRepository>();
+builder.Services.AddScoped<LecturerRepository>();
 
 builder.Services.AddScoped<IRoleRepository, RoleRepository>();
 
 builder.Services.AddScoped<IClaimRepository, ClaimRepository>();
+
+builder.Services.AddTransient<ITuitionFeeRepository, TuitionFeeRepository>();
+
 
 
 builder.Services.AddTransient<UserService>();
 builder.Services.AddTransient<EnrollmentService>();
 builder.Services.AddTransient<GradeService>();
 builder.Services.AddTransient<EmailService>();
+
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAllOrigins", policy =>
+    {
+        policy.AllowAnyOrigin()
+              .AllowAnyMethod()
+              .AllowAnyHeader();
+    });
+});
+
 
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseOracle(builder.Configuration.GetConnectionString("DB") ??
@@ -105,7 +121,34 @@ builder.Services.AddAuthorization(options =>
         policy.RequireClaim("permission", "CanManageStudents"));
 });
 
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("ManageSchedulePolicy", policy =>
+        policy.RequireClaim("permission", "CanManageSchedules"));
+});
+
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("ManageExam_GradePolicy", policy =>
+        policy.RequireClaim("permission", "CanManageExam_Grade"));
+});
+
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("ManageUserPolicy", policy =>
+        policy.RequireClaim("permission", "CanManageUsers"));
+              
+});
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("ManageTP_ClassPolicy", policy =>
+        policy.RequireClaim("permission", "CanManageTP_Classes"));
+
+});
+
 var app = builder.Build();
+
+app.UseCors("AllowAllOrigins");
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

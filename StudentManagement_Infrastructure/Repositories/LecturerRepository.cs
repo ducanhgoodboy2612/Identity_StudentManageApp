@@ -6,7 +6,7 @@ using StudentManagement_Domain.Interface;
 
 namespace StudentManagement_Infrastructure.Repositories
 {
-    public class LecturerRepository : ILecturerRepository
+    public class LecturerRepository
     {
         private readonly AppDbContext _context;
 
@@ -38,9 +38,9 @@ namespace StudentManagement_Infrastructure.Repositories
             return lecturer;
         }
 
-        public async Task<Lecturer> UpdateLecturerAsync(int id, LecturerDTO lecturerDTO)
+        public async Task<Lecturer> UpdateLecturerAsync(LecturerDTO lecturerDTO)
         {
-            var lecturer = await _context.Lecturers.FirstOrDefaultAsync(l => l.LecturerID == id);
+            var lecturer = await _context.Lecturers.FirstOrDefaultAsync(l => l.LecturerID == lecturerDTO.LecturerID);
             if (lecturer == null) return null;
 
             lecturer.FullName = lecturerDTO.FullName;
@@ -64,12 +64,5 @@ namespace StudentManagement_Infrastructure.Repositories
         }
     }
 
-    public class LecturerDTO
-    {
-        public int LecturerID { get; set; }
-        public string FullName { get; set; }
-        public string Phone { get; set; }
-        public string Email { get; set; }
-        public int? YoB { get; set; }
-    }
+    
 }

@@ -32,11 +32,11 @@ namespace StudentManagement_Infrastructure.Repositories
                 return null;
             }
 
-            if (user.TwoFactorEnabled)
-            {
-                var message = await SendOtpAfterLogin(email);
-                return message;
-            }
+            //if (user.TwoFactorEnabled)
+            //{
+            //    var message = await SendOtpAfterLogin(email);
+            //    return message;
+            //}
 
             var claims = new List<Claim>
             {
@@ -84,15 +84,16 @@ namespace StudentManagement_Infrastructure.Repositories
             var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
 
             // send email
-            //var callbackUrl = $"https://localhost:44378/api/Auth/ConfirmEmail?userId={user.Id}&token={Uri.EscapeDataString(token)}";
-            //await _emailService.SendEmailAsync(
-            //    email,
-            //    "Confirm your email",
-            //    $"<p>Please confirm your account by clicking the link below:</p><a href='{callbackUrl}'>Confirm Email</a>"
-            //);
+            var callbackUrl = $"https://localhost:7008/api/Auth/ConfirmEmail?userId={user.Id}&token={Uri.EscapeDataString(token)}";
+            await _emailService.SendEmailAsync(
+                email,
+                "Confirm your email",
+                $"<p>Please confirm your account by clicking the link below:</p><a href='{callbackUrl}'>Confirm Email</a>"
+            );
 
             return (true, Array.Empty<string>(), user);
         }
+
 
         public async Task<IdentityResult> AddClaimToUserAsync(string userId, string claimType, string claimValue)
         {
@@ -163,7 +164,7 @@ namespace StudentManagement_Infrastructure.Repositories
                     "Your OTP Code",
                     $"<p>Xin chào {user.UserName},</p>" +
                     $"<p>Bạn đã yêu cầu xác thực OTP. Vui lòng click vào link dưới đây để xác thực:</p>" +
-                    $"<p><a href='{"http://localhost:3000/students"}'>Xác thực OTP</a></p>" +
+                    $"<p><a href='{"http://localhost:3000/otp-verify"}'>Xác thực OTP</a></p>" +
                     $"<p>Mã OTP: <strong>{otp}</strong></p>"
                 );
 
@@ -185,5 +186,41 @@ namespace StudentManagement_Infrastructure.Repositories
 
             return (roles, claims);
         }
+
+        public async Task<(bool Success, string Message, IEnumerable<IdentityError> Errors)> ConfirmEmailAsync(string userId, string token)
+        {
+            var user = await _userManager.FindByIdAsync(userId);
+            if (user == null)
+            {
+                return (false, "Invalid user.", null);
+            }
+
+            var result = await _userManager.ConfirmEmailAsync(user, token);
+
+            if (!result.Succeeded)
+            {
+                return (false, "Failed to confirm email.", result.Errors);
+            }
+
+            return (true, "Email confirmed successfully!", null);
+        }
+
+        public async Task<bool> RemoveUserClaimAsync(string userId, string claimType, string claimValue)
+        {
+            var user = await _userManager.FindByIdAsync(userId);
+            if (user == null)
+                throw new KeyNotFoundException("User not found.");
+
+            var claimToRemove = new Claim(claimType, claimValue);
+            var result = await _userManager.RemoveClaimAsync(user, claimToRemove);
+            if (!result.Succeeded)
+            {
+                var errors = string.Join(", ", result.Errors.Select(e => e.Description));
+                throw new InvalidOperationException($"Failed to remove claim: {errors}");
+            }
+
+            return true;
+        }
+
     }
 }
